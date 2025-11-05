@@ -1,3 +1,14 @@
+.ionic-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--app-card);
+  font-size: 16px;
+  color: var(--app-text);
+  box-sizing: border-box;
+}
+
 .big-number {
   font-family: 'Comic Neue', 'Nunito', sans-serif;
   font-size: 42px;
@@ -28,52 +39,38 @@
   font-size: 13px;
 }
 
-.decades {
-  --inner-padding-end: 0;
-}
-
-ion-chip {
-  cursor: pointer;
-}
-
-.fp-wrap {
-  --padding-bottom: 8px;
-  align-items: center;
-
-  ion-input {
-    font-size: 16px;
-  }
-
-  ion-button[fill="clear"] {
-    margin-left: 8px;
-  }
-}
-
-.flatpickr-calendar {
-  font-size: 15px;           /* texto confortável */
-  max-width: 360px;          /* não “estoura” em telas pequenas */
-}
-
 .chips {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
 }
 
-.ionic-input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(0,0,0,.08);
-  background: var(--app-card);
-  font-size: 16px;
-  color: var(--app-text);
-  box-sizing: border-box;
+.flatpickr-calendar {
+  font-size: 15px;
+  max-width: 360px;
 }
 
-@media (min-width: 480px) {
-  .flatpickr-calendar {
-    font-size: 16px;
+.flatpickr-confirm-btn {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 6px 0;
+  border: none;
+  border-radius: 6px;
+  background: var(--ion-color-primary, #2b6f3e);
+  color: #fff;
+  font-weight: 600;
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+
+  &:hover {
+    background: color-mix(in srgb, var(--ion-color-primary, #2b6f3e) 85%, black 10%);
   }
 }
 
+ion-item.fp-wrap ion-label[position="stacked"] {
+  margin-bottom: 6px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}

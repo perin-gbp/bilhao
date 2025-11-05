@@ -1,17 +1,20 @@
-import { Component, OnDestroy, AfterViewInit, ViewChild, ElementRef, effect, signal, viewChild } from '@angular/core';
-import { AsyncPipe, DatePipe } from '@angular/common';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonTitle, IonToolbar, IonInput } from '@ionic/angular/standalone';
+import { Component, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
+import {
+  IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent,
+  IonHeader, IonIcon, IonItem, IonLabel, IonList, IonTitle, IonToolbar, IonInput
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { timeOutline, calendarOutline, heartOutline, refreshOutline } from 'ionicons/icons';
-import { AgeService, AgeState } from '../core/age.service';
-import { nf, formatSecondsAsDHMS } from '../shared/format';
 
 import flatpickr from 'flatpickr';
-import { Options as FlatpickrOptions } from 'flatpickr/dist/types/options';
-import { Instance as FlatpickrInstance } from 'flatpickr/dist/types/instance';
+import type { Options as FlatpickrOptions } from 'flatpickr/dist/types/options';
+import type { Instance as FlatpickrInstance } from 'flatpickr/dist/types/instance';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/airbnb.css';
 
+import { AgeService, AgeState } from '../core/age.service';
+import { nf, formatSecondsAsDHMS } from '../shared/format';
 
 @Component({
   selector: 'app-contador',
@@ -20,50 +23,80 @@ import 'flatpickr/dist/themes/airbnb.css';
     IonContent, IonHeader, IonToolbar, IonTitle,
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
     IonList, IonItem, IonLabel, IonButton, IonIcon,
-    AsyncPipe, DatePipe, IonInput
+    NgIf, AsyncPipe, DatePipe, IonInput
   ],
   templateUrl: './contador.page.html',
   styleUrls: ['./contador.page.scss']
 })
 export class ContadorPage implements AfterViewInit, OnDestroy {
-
   @ViewChild('birthInput') birthInput!: ElementRef<HTMLInputElement>;
 
-  state = signal<AgeState>({
+  state: AgeState = {
     birthISO: null,
     secondsLived: 0,
     nextBillionIndex: null,
     nextBillionAt: null,
     secondsToNextBillion: null,
-  });
+  };
 
   nf = nf;
   fmtCountdown = formatSecondsAsDHMS;
-
   private fp?: FlatpickrInstance;
   currentYear = new Date().getFullYear();
 
   constructor(private age: AgeService) {
     addIcons({ timeOutline, calendarOutline, heartOutline, refreshOutline });
-
-    this.age.ageState$.subscribe(s => this.state.set(s));
+    this.age.ageState$.subscribe(s => this.state = s);
   }
 
-  setBirth(event: CustomEvent) {
-    const value = (event as any).detail.value as string; // ISO
-    if (value) this.age.setBirthISO(value);
+  ngAfterViewInit(): void {
+    const confirmButtonPlugin = (onConfirm: (date: Date) => void) => {
+      return (fpInstance: any) => {
+        function buildPlugin() {
+          const confirmBtn = document.createElement('button');
+          confirmBtn.type = 'button';
+          confirmBtn.textContent = 'Confirmar';
+          confirmBtn.className = 'flatpickr-confirm-btn';
+          confirmBtn.addEventListener('click', () => {
+            const date = fpInstance.selectedDates[0];
+            if (date) onConfirm(date);
+            fpInstance.close();
+          });
+
+          return {
+            onReady: () => {
+              fpInstance.calendarContainer.appendChild(confirmBtn);
+            },
+          };
+        }
+        return buildPlugin();
+      };
+    };
+
+    const options: FlatpickrOptions = {
+      enableTime: true,
+      time_24hr: true,
+      altInput: true,
+      altFormat: 'd/m/Y H:i',
+      dateFormat: 'Y-m-d H:i',
+      defaultHour: 12,
+      minuteIncrement: 1,
+      minDate: '1900-01-01',
+      maxDate: new Date(),
+      locale: { firstDayOfWeek: 1 },
+      clickOpens: true,
+      allowInput: false,
+      static: false,
+      defaultDate: this.state.birthISO ? new Date(this.state.birthISO) : undefined,
+      plugins: [confirmButtonPlugin((d) => this.setBirthFromDate(d))],
+    };
+
+    this.fp = flatpickr(this.birthInput.nativeElement, options);
   }
 
-  jumpToYear(yearInput: number | string | null | undefined) {
-    const year = typeof yearInput === 'string' ? parseInt(yearInput, 10) : (yearInput ?? NaN);
-    if (!Number.isFinite(year) || year < 1900 || year > this.currentYear) return;
 
-    const baseISO = this.state().birthISO ?? new Date().toISOString();
-    const current = new Date(baseISO);
-    current.setFullYear(year as number);
-    current.setSeconds(0, 0);
-
-    this.setBirthFromDate(current);
+  openCalendar() {
+    this.fp?.open();
   }
 
   private toLocalISOString(d: Date) {
@@ -84,8 +117,18 @@ export class ContadorPage implements AfterViewInit, OnDestroy {
   setBirthFromDate(d: Date) {
     const isoLocal = this.toLocalISOString(d);
     this.age.setBirthISO(isoLocal);
-    // reflete no input (quando usuário ajusta via atalhos)
     this.fp?.setDate(d, true);
+  }
+
+  jumpToYear(yearInput: number | string | null | undefined) {
+    const year = typeof yearInput === 'string' ? parseInt(yearInput, 10) : (yearInput ?? NaN);
+    if (!Number.isFinite(year) || year < 1900 || year > this.currentYear) return;
+
+    const baseISO = this.state.birthISO ?? new Date().toISOString();
+    const current = new Date(baseISO);
+    current.setFullYear(year as number);
+    current.setSeconds(0, 0);
+    this.setBirthFromDate(current);
   }
 
   clearBirth() {
@@ -95,32 +138,5 @@ export class ContadorPage implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.fp?.destroy();
-  }
-
-  ngAfterViewInit(): void {
-    const options: FlatpickrOptions = {
-      enableTime: true,
-      time_24hr: true,
-      allowInput: true,
-      altInput: true,
-      altFormat: 'd/m/Y H:i',
-      dateFormat: 'Y-m-d H:i',
-      defaultHour: 12,
-      minuteIncrement: 1,
-      minDate: '1900-01-01',
-      maxDate: new Date(),
-      locale: { firstDayOfWeek: 1 },
-      defaultDate: this.state().birthISO ? new Date(this.state().birthISO!) : undefined,
-      onChange: (dates: Date[]) => {
-        const d = dates?.[0];
-        if (d) this.setBirthFromDate(d);
-      }
-    };
-
-    this.fp = flatpickr(this.birthInput.nativeElement, options);
-  }
-
-  openCalendar() {
-    this.fp?.open();
   }
 }

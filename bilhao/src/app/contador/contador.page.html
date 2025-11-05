@@ -6,7 +6,6 @@
 
 <ion-content class="ion-padding">
 
-  <!-- Card de input -->
   <ion-card class="card">
     <ion-card-header>
       <ion-card-title class="display">
@@ -14,15 +13,15 @@
         Data e hora de nascimento
       </ion-card-title>
     </ion-card-header>
-    <ion-card-content>
 
-      <ion-item lines="full" class="fp-wrap" data-input>
+    <ion-card-content>
+      <ion-item lines="full" class="fp-wrap">
         <ion-label position="stacked">Selecione ou digite</ion-label>
         <input
           #birthInput
           type="text"
           placeholder="dd/mm/aaaa hh:mm"
-          [value]="state().birthISO ? (state().birthISO | date:'dd/MM/yyyy HH:mm') : ''"
+          [value]="state.birthISO ? (state.birthISO | date:'dd/MM/yyyy HH:mm') : ''"
           class="flatpickr-input ionic-input"
         />
         <ion-button fill="clear" slot="end" (click)="openCalendar()">
@@ -30,7 +29,6 @@
         </ion-button>
       </ion-item>
 
-      <!-- Atalhos de década -->
       <ion-item lines="none" class="decades">
         <ion-label>Atalhos de década:</ion-label>
         <div class="chips">
@@ -42,8 +40,7 @@
         </div>
       </ion-item>
 
-      <!-- Pular direto para o ano -->
-      <ion-item lines="full">
+      <!-- <ion-item lines="full">
         <ion-label position="stacked">Pular para o ano</ion-label>
         <ion-input
           type="number"
@@ -51,10 +48,10 @@
           placeholder="Ex.: 1989"
           (ionChange)="jumpToYear($any($event.detail.value))">
         </ion-input>
-      </ion-item>
+      </ion-item> -->
 
       <div class="actions">
-        <ion-button fill="outline" color="medium" (click)="clearBirth()" [disabled]="!state().birthISO">
+        <ion-button fill="outline" color="medium" (click)="clearBirth()" [disabled]="!state.birthISO">
           Limpar
         </ion-button>
       </div>
@@ -65,41 +62,34 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Card do contador -->
-  <ion-card class="card" *ngIf="state().birthISO">
+  <ion-card class="card" *ngIf="state.birthISO">
     <ion-card-header>
       <ion-card-title class="display">
-        <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
+        <ion-icon name="time-outline"></ion-icon>
         Segundos vividos
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <div class="big-number">{{ nf.format(state().secondsLived) }}</div>
+      <div class="big-number">{{ nf.format(state.secondsLived) }}</div>
       <div class="sub">atualiza em tempo real</div>
     </ion-card-content>
   </ion-card>
 
-  <!-- Card do próximo bilhão -->
-  <ion-card class="card" *ngIf="state().nextBillionAt">
+  <ion-card class="card" *ngIf="state.nextBillionAt">
     <ion-card-header>
       <ion-card-title class="display">Próximo bilhão</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <div class="info-line">
-        Índice: <b>{{ state().nextBillionIndex }}</b>º bilhão
+        Índice: <b>{{ state.nextBillionIndex }}</b>º bilhão
       </div>
       <div class="info-line">
-        Data/hora: <b>{{ state().nextBillionAt | date:'full' }}</b>
+        Data/hora: <b>{{ state.nextBillionAt | date:'full' }}</b>
       </div>
       <div class="countdown">
-        Falta: <b>{{ fmtCountdown(state().secondsToNextBillion!) }}</b>
+        Falta: <b>{{ fmtCountdown(state.secondsToNextBillion!) }}</b>
       </div>
     </ion-card-content>
   </ion-card>
-
-  <!-- Dica extra -->
-  <p *ngIf="!state().birthISO" class="tip">
-    Dica: selecione a data e hora com precisão (minuto). O iPhone/Android assumem seu fuso local.
-  </p>
 
 </ion-content>
