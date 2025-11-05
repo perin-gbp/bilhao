@@ -1,0 +1,79 @@
+.big-number {
+  font-family: 'Comic Neue', 'Nunito', sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.sub {
+  opacity: 0.7;
+}
+
+.info-line {
+  margin: 4px 0;
+}
+
+.countdown {
+  margin-top: 8px;
+  font-size: 18px;
+}
+
+.actions {
+  margin-top: 8px;
+}
+
+.tip, .hint {
+  margin-top: 8px;
+  opacity: 0.8;
+  font-size: 13px;
+}
+
+.decades {
+  --inner-padding-end: 0;
+}
+
+ion-chip {
+  cursor: pointer;
+}
+
+.fp-wrap {
+  --padding-bottom: 8px;
+  align-items: center;
+
+  ion-input {
+    font-size: 16px;
+  }
+
+  ion-button[fill="clear"] {
+    margin-left: 8px;
+  }
+}
+
+.flatpickr-calendar {
+  font-size: 15px;           /* texto confortável */
+  max-width: 360px;          /* não “estoura” em telas pequenas */
+}
+
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ionic-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: var(--app-card);
+  font-size: 16px;
+  color: var(--app-text);
+  box-sizing: border-box;
+}
+
+@media (min-width: 480px) {
+  .flatpickr-calendar {
+    font-size: 16px;
+  }
+}
+
