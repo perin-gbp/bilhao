@@ -1,15 +1,15 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, interval, Subscription } from 'rxjs';
 
-const STORAGE_KEY = 'birthISO'; // armazena string ISO ex: 1990-11-07T19:30:00-03:00
+const STORAGE_KEY = 'birthISO'; 
 const BILLION = 1_000_000_000;
-const TICK_MS = 1000; // 1s
+const TICK_MS = 1000; 
 
 export interface AgeState {
   birthISO: string | null;
-  secondsLived: number;           // inteiros
-  nextBillionIndex: number | null; // 1 para 1bi, 2 para 2bi, ...
-  nextBillionAt: Date | null;     // data/hora da próxima virada
+  secondsLived: number;           
+  nextBillionIndex: number | null; 
+  nextBillionAt: Date | null;     
   secondsToNextBillion: number | null;
 }
 
@@ -29,16 +29,13 @@ export class AgeService {
     if (saved) this.setBirthISO(saved);
   }
 
-  /** Observa o estado */
   get ageState$() {
     return this.state$.asObservable();
   }
 
-  /** Define/atualiza a data de nascimento (ISO com timezone do usuário) */
   setBirthISO(iso: string) {
     localStorage.setItem(STORAGE_KEY, iso);
     const birth = new Date(iso);
-    // inicia/reativa o ticker
     this.startTicker(birth);
   }
 
@@ -54,12 +51,9 @@ export class AgeService {
     });
   }
 
-  // -------- Internos --------
-
   private startTicker(birth: Date) {
     this.stopTicker();
 
-    // Atualiza imediatamente, depois a cada 1s
     const tick = () => this.computeState(birth);
 
     this.zone.runOutsideAngular(() => {
@@ -77,17 +71,14 @@ export class AgeService {
     const now = new Date();
     const secondsLived = Math.max(0, Math.floor((now.getTime() - birth.getTime()) / 1000));
 
-    // próximo bilhão:
-    // k atual = floor(seconds/1e9); próximo índice = k+1 (pelo menos 1)
     const currentIndex = Math.floor(secondsLived / BILLION);
     const nextIndex = currentIndex + 1;
     const nextBillionAt = new Date(birth.getTime() + nextIndex * BILLION * 1000);
     const secondsToNextBillion = Math.max(0, Math.floor((nextBillionAt.getTime() - now.getTime()) / 1000));
 
-    // publica dentro da zona Angular para atualizar a UI
     this.zone.run(() => {
       this.state$.next({
-        birthISO: birth.toISOString(), // normaliza interna, mas mantemos o que está no storage
+        birthISO: birth.toISOString(),
         secondsLived,
         nextBillionIndex: nextIndex,
         nextBillionAt,
