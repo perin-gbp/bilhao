@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1762464365637,
+  "timestamp": 1762468943727,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -44,7 +44,7 @@
         "/chunk-YYQJZ6HT.js",
         "/chunk-Z2K6LDGJ.js",
         "/index.html",
-        "/main-6TVAUVIT.js",
+        "/main-ANQ2H5ZN.js",
         "/polyfills-TDCRLYKL.js",
         "/styles-I55GOHLU.css"
       ],
@@ -59,6 +59,13 @@
       },
       "urls": [
         "/assets/icon/favicon.png",
+        "/assets/icon/icon-128x128.png",
+        "/assets/icon/icon-192x192.png",
+        "/assets/icon/icon-256x256.png",
+        "/assets/icon/icon-384x384.png",
+        "/assets/icon/icon-512x512.png",
+        "/assets/icon/icon-72x72.png",
+        "/assets/icon/icon-96x96.png",
         "/assets/shapes.svg"
       ],
       "patterns": []
@@ -66,7 +73,14 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "/assets/icon/favicon.png": "7798b8e0eb61d7375c245af78bbf5c916932bf13",
+    "/assets/icon/favicon.png": "e1b815c396de061510433b48468afb408ab92638",
+    "/assets/icon/icon-128x128.png": "f25fd844e1d6c8a2f8477ed8f980368f74892767",
+    "/assets/icon/icon-192x192.png": "c4a9b305599a012874c87536cf190934571e8acb",
+    "/assets/icon/icon-256x256.png": "d1bc5418d6ff1862873fa5b251a72a29717c3194",
+    "/assets/icon/icon-384x384.png": "5194991b987ce98858dfa5ab64d21ab72b38e2b6",
+    "/assets/icon/icon-512x512.png": "cea84690162443d3e4052fcbdda5ef72ea74d32e",
+    "/assets/icon/icon-72x72.png": "4d534a59b56e048815ba6d4e6514d68cd903a03c",
+    "/assets/icon/icon-96x96.png": "b31442e459500a0fc4bc238d28f26eb69fa0dd66",
     "/assets/shapes.svg": "638f87e27e6fc7ddfd6e6b262ea70d690f6c7011",
     "/chunk-265JSF36.js": "f790fd08ac06d3624ad47741cb9c6909df5b5046",
     "/chunk-36ESZ2IJ.js": "8495b74091e3bf0853f7c2819276d38ed3fd9bdf",
@@ -100,8 +114,8 @@
     "/chunk-YDSAYBYO.js": "6ff492fc1e24958201c1eda07ba6d82dee6b7bce",
     "/chunk-YYQJZ6HT.js": "34503eaf0c012fdad62a87215fb8b5f58a224b87",
     "/chunk-Z2K6LDGJ.js": "1bf0c5f03105e27e1b83c63cfd9fd74ed6597364",
-    "/index.html": "bd50c8954cb72a510d2a09d2935c36c2852b2dad",
-    "/main-6TVAUVIT.js": "3edff2c47f561612379f7a79d79801bc2ac37122",
+    "/index.html": "a2cd973456a8925e8ff9be4ffbc7ceb3395e6534",
+    "/main-ANQ2H5ZN.js": "f816cbc72884e93e38edc2ba68ecd8f33bd5531d",
     "/polyfills-TDCRLYKL.js": "454f6db4230cc7ab61b24fe465dcc92bf041737d",
     "/styles-I55GOHLU.css": "1c80a7cf823cc1dcfce4a523e7acc4f60c905103"
   },
