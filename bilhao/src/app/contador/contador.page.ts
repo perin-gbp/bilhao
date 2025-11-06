@@ -17,6 +17,8 @@ import 'flatpickr/dist/themes/airbnb.css';
 import { AgeService, AgeState } from '../core/age.service';
 import { nf, formatSecondsAsDHMS } from '../shared/format';
 
+type IonDatetimeEl = HTMLIonDatetimeElement | any;
+
 @Component({
   selector: 'app-contador',
   standalone: true,
@@ -31,7 +33,9 @@ import { nf, formatSecondsAsDHMS } from '../shared/format';
   styleUrls: ['./contador.page.scss']
 })
 export class ContadorPage implements AfterViewInit, OnDestroy {
+
   @ViewChild('birthInput') birthInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('picker', { read: ElementRef }) pickerRef!: ElementRef<IonDatetimeEl>;
 
   state: AgeState = {
     birthISO: null,
@@ -108,12 +112,8 @@ export class ContadorPage implements AfterViewInit, OnDestroy {
     const day = pad(d.getDate());
     const hh = pad(d.getHours());
     const mm = pad(d.getMinutes());
-    const ss = '00';
-    const tz = -d.getTimezoneOffset();
-    const sign = tz >= 0 ? '+' : '-';
-    const tzh = pad(Math.floor(Math.abs(tz) / 60));
-    const tzm = pad(Math.abs(tz) % 60);
-    return `${y}-${m}-${day}T${hh}:${mm}:${ss}${sign}${tzh}:${tzm}`;
+    const ss = pad(d.getSeconds());
+    return `${y}-${m}-${day}T${hh}:${mm}:${ss}`; // sem +03:00
   }
 
   setBirthFromDate(d: Date) {
@@ -128,9 +128,19 @@ export class ContadorPage implements AfterViewInit, OnDestroy {
 
     const baseISO = this.state.birthISO ?? new Date().toISOString();
     const current = new Date(baseISO);
+
+    const localOffset = current.getTimezoneOffset(); // em minutos
     current.setFullYear(year as number);
+    current.setMinutes(current.getMinutes() - localOffset);
     current.setSeconds(0, 0);
-    this.setBirthFromDate(current);
+    current.setMilliseconds(0);
+
+    const isoUtc = current.toISOString();
+    this.age.setBirthISO(isoUtc);
+
+    if (this.pickerRef?.nativeElement){
+      this.pickerRef.nativeElement.valueAsDate = isoUtc;
+    }
   }
 
   clearBirth() {
@@ -147,13 +157,6 @@ export class ContadorPage implements AfterViewInit, OnDestroy {
     if (!selected) return;
 
     const birth = new Date(selected);
-    const oneBillionMs = 1_000_000_000 * 1000;
-
-    this.state = {
-      ...this.state,
-      birthISO: birth.toISOString(),
-      nextBillionAt: new Date(birth.getTime() + oneBillionMs),
-      secondsLived: Math.floor((Date.now() - birth.getTime()) / 1000),
-    };
+    this.setBirthFromDate(birth);
   }
 }
