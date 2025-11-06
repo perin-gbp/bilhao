@@ -17,12 +17,7 @@
     <ion-card-content>
       <ion-item lines="full" class="fp-wrap">
         <ion-label position="stacked">Selecione ou digite</ion-label>
-        <ion-datetime-button
-          datetime="datetime">
-        </ion-datetime-button>
-        <ion-button fill="clear" slot="end" (click)="openCalendar()">
-          <ion-icon name="calendar-outline"></ion-icon>
-        </ion-button>
+        <ion-datetime-button datetime="datetime"></ion-datetime-button>
       </ion-item>
 
       <ion-item lines="none" class="decades">
@@ -37,16 +32,6 @@
         </div>
       </ion-item>
 
-      <!-- <ion-item lines="full">
-        <ion-label position="stacked">Pular para o ano</ion-label>
-        <ion-input
-          type="number"
-          inputmode="numeric"
-          placeholder="Ex.: 1989"
-          (ionChange)="jumpToYear($any($event.detail.value))">
-        </ion-input>
-      </ion-item> -->
-
       <div class="actions">
         <ion-button fill="outline" color="medium" (click)="clearBirth()" [disabled]="!state.birthISO">
           Limpar
@@ -54,7 +39,7 @@
       </div>
 
       <p class="hint">
-        * Você pode digitar a data e hora diretamente ou usar o calendário. Usa o fuso local do aparelho.
+        * Você pode digitar a data e hora diretamente ou usar o calendário.
       </p>
     </ion-card-content>
   </ion-card>
@@ -89,29 +74,22 @@
     </ion-card-content>
   </ion-card>
 
+  <!-- Modal contendo o ion-datetime -->
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
       <ion-datetime
         #picker
         id="datetime"
         presentation="date-time"
-        [value]="state.birthISO || undefined"
+        [value]="isoForDisplay(state.birthISO)"
         [formatOptions]="{
-          date: {
-            month: 'short',
-            day: '2-digit',
-            year: 'numeric'
-          },
-          time: {
-            hour: '2-digit',
-            minute: '2-digit',
-          },
+          date: { month: 'short', day: '2-digit', year: 'numeric' },
+          time: { hour: '2-digit', minute: '2-digit' }
         }"
         hour-cycle="h23"
-        locale="pt-BR"
         [showDefaultButtons]="true"
-        (ionChange)="onDateSelected($event)"
-      ></ion-datetime>
+        (ionChange)="onDateSelected($event)">
+      </ion-datetime>
     </ng-template>
   </ion-modal>
 

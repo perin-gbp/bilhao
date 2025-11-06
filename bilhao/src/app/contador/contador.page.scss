@@ -75,3 +75,30 @@ ion-item.fp-wrap ion-label[position="stacked"] {
   letter-spacing: 0.3px;
 }
 
+ion-datetime-button::part(native) {
+  --padding-start: 0.5rem;
+  --padding-end: 0.5rem;
+  --padding-top: 0.25rem;
+  --padding-bottom: 0.25rem;
+  --border-radius: 8px;
+  font-size: 0.9rem;
+  min-height: 32px;
+}
+
+/* controla a área de texto dentro do botão */
+ion-datetime-button::part(text) {
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* opcional: ajustar borda e fundo */
+ion-datetime-button::part(native) {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 0.2s ease;
+  padding-bottom: 0.35rem;
+}
+
+ion-datetime-button::part(native):hover {
+  background: rgba(255, 255, 255, 0.15);
+}
