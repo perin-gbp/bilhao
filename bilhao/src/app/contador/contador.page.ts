@@ -110,26 +110,14 @@ export class ContadorPage implements OnDestroy {
     }
   }
 
-  openCalendar() {
-    (document.querySelector('ion-datetime-button') as HTMLIonDatetimeButtonElement)?.click();
-  }
-
-  // private subtractHoursFromIso(iso: string, hours: number): string {
-  //   if (!iso) return iso;
-  //   const d = new Date(iso);
-  //   d.setHours(d.getHours() - hours);
-  //   const pad = (n: number) => String(n).padStart(2, '0');
-  //   const y = d.getFullYear();
-  //   const m = pad(d.getMonth() + 1);
-  //   const day = pad(d.getDate());
-  //   const hh = pad(d.getHours());
-  //   const mm = pad(d.getMinutes());
-  //   const ss = pad(d.getSeconds());
-  //   return `${y}-${m}-${day}T${hh}:${mm}:${ss}`;
-  // }
-
   isoForDisplay(iso: string | null ): string {
-    if (!iso) return '';
+    if (!iso){
+      const d = new Date();
+      d.setHours(d.getHours());
+      const pad = (n: number) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    };
+    
     const d = new Date(iso);
     d.setHours(d.getHours());
     const pad = (n: number) => String(n).padStart(2, '0');
