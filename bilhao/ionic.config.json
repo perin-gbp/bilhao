@@ -1,7 +1,0 @@
-{
-  "name": "bilhao",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular-standalone"
-}
