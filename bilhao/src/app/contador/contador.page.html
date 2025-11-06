@@ -17,13 +17,9 @@
     <ion-card-content>
       <ion-item lines="full" class="fp-wrap">
         <ion-label position="stacked">Selecione ou digite</ion-label>
-        <input
-          #birthInput
-          type="text"
-          placeholder="dd/mm/aaaa hh:mm"
-          [value]="state.birthISO ? (state.birthISO | date:'dd/MM/yyyy HH:mm') : ''"
-          class="flatpickr-input ionic-input"
-        />
+        <ion-datetime-button
+          datetime="datetime">
+        </ion-datetime-button>
         <ion-button fill="clear" slot="end" (click)="openCalendar()">
           <ion-icon name="calendar-outline"></ion-icon>
         </ion-button>
@@ -32,6 +28,7 @@
       <ion-item lines="none" class="decades">
         <ion-label>Atalhos de década:</ion-label>
         <div class="chips">
+          <ion-button size="small" (click)="jumpToYear(1960)">1960</ion-button>
           <ion-button size="small" (click)="jumpToYear(1970)">1970</ion-button>
           <ion-button size="small" (click)="jumpToYear(1980)">1980</ion-button>
           <ion-button size="small" (click)="jumpToYear(1990)">1990</ion-button>
@@ -91,5 +88,27 @@
       </div>
     </ion-card-content>
   </ion-card>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        id="datetime"
+        presentation="date-time"
+        value="2023-11-02T01:22:00"
+        [formatOptions]="{
+          date: {
+            month: 'short',
+            day: '2-digit',
+            year: 'numeric'
+          },
+          time: {
+            hour: '2-digit',
+            minute: '2-digit',
+          },
+        }"
+        (ionChange)="onDateSelected($event)"
+      ></ion-datetime>
+    </ng-template>
+  </ion-modal>
 
 </ion-content>

@@ -1,8 +1,9 @@
 import { Component, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import {
   IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent,
-  IonHeader, IonIcon, IonItem, IonLabel, IonList, IonTitle, IonToolbar, IonInput
+  IonHeader, IonIcon, IonItem, IonLabel, IonTitle, IonToolbar, IonModal,
+  IonDatetime, IonDatetimeButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { timeOutline, calendarOutline, heartOutline, refreshOutline } from 'ionicons/icons';
@@ -22,8 +23,9 @@ import { nf, formatSecondsAsDHMS } from '../shared/format';
   imports: [
     IonContent, IonHeader, IonToolbar, IonTitle,
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
-    IonList, IonItem, IonLabel, IonButton, IonIcon,
-    NgIf, AsyncPipe, DatePipe, IonInput
+    IonItem, IonLabel, IonButton, IonIcon,
+    NgIf, DatePipe, IonDatetime,
+    IonDatetimeButton, IonModal
   ],
   templateUrl: './contador.page.html',
   styleUrls: ['./contador.page.scss']
@@ -138,5 +140,20 @@ export class ContadorPage implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.fp?.destroy();
+  }
+
+  onDateSelected(event: any) {
+    const selected = event.detail?.value;
+    if (!selected) return;
+
+    const birth = new Date(selected);
+    const oneBillionMs = 1_000_000_000 * 1000;
+
+    this.state = {
+      ...this.state,
+      birthISO: birth.toISOString(),
+      nextBillionAt: new Date(birth.getTime() + oneBillionMs),
+      secondsLived: Math.floor((Date.now() - birth.getTime()) / 1000),
+    };
   }
 }
