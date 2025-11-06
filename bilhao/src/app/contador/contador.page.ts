@@ -11,7 +11,7 @@ import { addIcons } from 'ionicons';
 import { AgeService, AgeState } from '../core/age.service';
 import { nf, formatSecondsAsDHMS } from '../shared/format';
 
-// usamos any porque o tipo do web component não é exportado publicamente
+
 type IonDatetimeEl = any;
 
 @Component({
@@ -39,6 +39,7 @@ export class ContadorPage implements OnDestroy {
     secondsToNextBillion: null,
   };
 
+  private readonly initialDisplayISO = this.toNaiveLocalISO(new Date());
   nf = nf;
   fmtCountdown = formatSecondsAsDHMS;
   currentYear = new Date().getFullYear();
@@ -112,12 +113,9 @@ export class ContadorPage implements OnDestroy {
 
   isoForDisplay(iso: string | null ): string {
     if (!iso){
-      const d = new Date();
-      d.setHours(d.getHours());
-      const pad = (n: number) => String(n).padStart(2, '0');
-      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+      return this.initialDisplayISO;
     };
-    
+
     const d = new Date(iso);
     d.setHours(d.getHours());
     const pad = (n: number) => String(n).padStart(2, '0');
