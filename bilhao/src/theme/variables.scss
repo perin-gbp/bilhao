@@ -1,0 +1,43 @@
+:root {
+  /* Paleta inspirada no convite + Packers */
+  --ion-color-primary: #2b6f3e;       /* verde Packers */
+  --ion-color-primary-rgb: 43,111,62;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #255f35;
+  --ion-color-primary-tint: #3f7f51;
+
+  --ion-color-secondary: #ffd75a;     /* dourado/areia da ampulheta */
+  --ion-color-secondary-rgb: 255,215,90;
+  --ion-color-secondary-contrast: #1b1b1b;
+  --ion-color-secondary-contrast-rgb: 27,27,27;
+  --ion-color-secondary-shade: #e0bd4f;
+  --ion-color-secondary-tint: #ffe078;
+
+  --ion-color-tertiary: #6ec1ff;      /* azul pastel do convite */
+  --ion-color-tertiary-rgb: 110,193,255;
+  --ion-color-tertiary-contrast: #0f1a22;
+  --ion-color-tertiary-contrast-rgb: 15,26,34;
+  --ion-color-tertiary-shade: #60a9e0;
+  --ion-color-tertiary-tint: #8ad0ff;
+
+  --ion-color-success: #4caf50;
+  --ion-color-warning: #ffb74d;
+  --ion-color-danger: #e57373;
+
+  /* Fundo pastel e texto base */
+  --app-bg: #fff8e6;                  /* creme suave do convite */
+  --app-card: #ffffff;
+  --app-text: #1b1b1b;
+
+  --ion-font-family: 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+/* Dark opcional (fica bonito com verde/dourado também) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --app-bg: #0f1720;
+    --app-card: #16212b;
+    --app-text: #e7f1ea;
+  }
+}
