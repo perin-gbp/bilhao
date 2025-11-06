@@ -1,4 +1,4 @@
-import { Component, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { DatePipe, NgIf } from '@angular/common';
 import {
   IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent,
@@ -6,18 +6,13 @@ import {
   IonDatetime, IonDatetimeButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { timeOutline, calendarOutline, heartOutline, refreshOutline } from 'ionicons/icons';
-
-import flatpickr from 'flatpickr';
-import type { Options as FlatpickrOptions } from 'flatpickr/dist/types/options';
-import type { Instance as FlatpickrInstance } from 'flatpickr/dist/types/instance';
-import 'flatpickr/dist/flatpickr.min.css';
-import 'flatpickr/dist/themes/airbnb.css';
+  import { timeOutline, calendarOutline, heartOutline, refreshOutline } from 'ionicons/icons';
 
 import { AgeService, AgeState } from '../core/age.service';
 import { nf, formatSecondsAsDHMS } from '../shared/format';
 
-type IonDatetimeEl = HTMLIonDatetimeElement | any;
+// usamos any porque o tipo do web component não é exportado publicamente
+type IonDatetimeEl = any;
 
 @Component({
   selector: 'app-contador',
@@ -32,9 +27,8 @@ type IonDatetimeEl = HTMLIonDatetimeElement | any;
   templateUrl: './contador.page.html',
   styleUrls: ['./contador.page.scss']
 })
-export class ContadorPage implements AfterViewInit, OnDestroy {
+export class ContadorPage implements OnDestroy {
 
-  @ViewChild('birthInput') birthInput!: ElementRef<HTMLInputElement>;
   @ViewChild('picker', { read: ElementRef }) pickerRef!: ElementRef<IonDatetimeEl>;
 
   state: AgeState = {
@@ -47,7 +41,6 @@ export class ContadorPage implements AfterViewInit, OnDestroy {
 
   nf = nf;
   fmtCountdown = formatSecondsAsDHMS;
-  private fp?: FlatpickrInstance;
   currentYear = new Date().getFullYear();
 
   constructor(private age: AgeService) {
@@ -55,57 +48,8 @@ export class ContadorPage implements AfterViewInit, OnDestroy {
     this.age.ageState$.subscribe(s => this.state = s);
   }
 
-  ngAfterViewInit(): void {
-    const confirmButtonPlugin = (onConfirm: (date: Date) => void) => {
-      return (fpInstance: any) => {
-        function buildPlugin() {
-          const confirmBtn = document.createElement('button');
-          confirmBtn.type = 'button';
-          confirmBtn.textContent = 'Confirmar';
-          confirmBtn.className = 'flatpickr-confirm-btn';
-          confirmBtn.addEventListener('click', () => {
-            const date = fpInstance.selectedDates[0];
-            if (date) onConfirm(date);
-            fpInstance.close();
-          });
-
-          return {
-            onReady: () => {
-              fpInstance.calendarContainer.appendChild(confirmBtn);
-            },
-          };
-        }
-        return buildPlugin();
-      };
-    };
-
-    const options: FlatpickrOptions = {
-      enableTime: true,
-      time_24hr: true,
-      altInput: true,
-      altFormat: 'd/m/Y H:i',
-      dateFormat: 'Y-m-d H:i',
-      defaultHour: 12,
-      minuteIncrement: 1,
-      minDate: '1900-01-01',
-      maxDate: new Date(),
-      locale: { firstDayOfWeek: 1 },
-      clickOpens: true,
-      allowInput: false,
-      static: false,
-      defaultDate: this.state.birthISO ? new Date(this.state.birthISO) : undefined,
-      plugins: [confirmButtonPlugin((d) => this.setBirthFromDate(d))],
-    };
-
-    this.fp = flatpickr(this.birthInput.nativeElement, options);
-  }
-
-
-  openCalendar() {
-    this.fp?.open();
-  }
-
-  private toLocalISOString(d: Date) {
+  // ISO “local ingênuo”: sem Z e sem offset => impede drift de horas
+  private toNaiveLocalISO(d: Date) {
     const pad = (n: number) => String(n).padStart(2, '0');
     const y = d.getFullYear();
     const m = pad(d.getMonth() + 1);
@@ -113,50 +57,84 @@ export class ContadorPage implements AfterViewInit, OnDestroy {
     const hh = pad(d.getHours());
     const mm = pad(d.getMinutes());
     const ss = pad(d.getSeconds());
-    return `${y}-${m}-${day}T${hh}:${mm}:${ss}`; // sem +03:00
+    return `${y}-${m}-${day}T${hh}:${mm}:${ss}`;
   }
 
   setBirthFromDate(d: Date) {
-    const isoLocal = this.toLocalISOString(d);
+    const isoLocal = this.toNaiveLocalISO(d);
     this.age.setBirthISO(isoLocal);
-    this.fp?.setDate(d, true);
+    
+    if (this.pickerRef?.nativeElement) {
+      this.pickerRef.nativeElement.value = this.isoForDisplay(isoLocal);
+    }
   }
 
   jumpToYear(yearInput: number | string | null | undefined) {
     const year = typeof yearInput === 'string' ? parseInt(yearInput, 10) : (yearInput ?? NaN);
     if (!Number.isFinite(year) || year < 1900 || year > this.currentYear) return;
 
-    const baseISO = this.state.birthISO ?? new Date().toISOString();
-    const current = new Date(baseISO);
+    const baseStr =
+      this.pickerRef?.nativeElement?.value ??
+      this.state.birthISO ??
+      this.toNaiveLocalISO(new Date());
 
-    const localOffset = current.getTimezoneOffset(); // em minutos
-    current.setFullYear(year as number);
-    current.setMinutes(current.getMinutes() - localOffset);
-    current.setSeconds(0, 0);
-    current.setMilliseconds(0);
+    const base = new Date(baseStr);
+    base.setFullYear(year as number);
+    base.setSeconds(0, 0);
 
-    const isoUtc = current.toISOString();
-    this.age.setBirthISO(isoUtc);
+    const isoLocal = this.toNaiveLocalISO(base);
+    this.age.setBirthISO(isoLocal);
+    
+    if (this.pickerRef?.nativeElement) {
+      this.pickerRef.nativeElement.value = this.isoForDisplay(isoLocal);
+    }
+  }
+
+  onDateSelected(event: any) {
+    const v: string | undefined = event.detail?.value;
+    if (!v) return;
+    const date = new Date(v);
+    const isoLocal = this.toNaiveLocalISO(date);
+    this.age.setBirthISO(isoLocal);
 
     if (this.pickerRef?.nativeElement){
-      this.pickerRef.nativeElement.valueAsDate = isoUtc;
+      this.pickerRef.nativeElement.value = this.isoForDisplay(isoLocal);
     }
   }
 
   clearBirth() {
     this.age.clearBirth();
-    this.fp?.clear();
+    // limpa o visual do ion-datetime
+    if (this.pickerRef?.nativeElement) {
+      this.pickerRef.nativeElement.value = undefined;
+    }
   }
 
-  ngOnDestroy(): void {
-    this.fp?.destroy();
+  openCalendar() {
+    (document.querySelector('ion-datetime-button') as HTMLIonDatetimeButtonElement)?.click();
   }
 
-  onDateSelected(event: any) {
-    const selected = event.detail?.value;
-    if (!selected) return;
+  // private subtractHoursFromIso(iso: string, hours: number): string {
+  //   if (!iso) return iso;
+  //   const d = new Date(iso);
+  //   d.setHours(d.getHours() - hours);
+  //   const pad = (n: number) => String(n).padStart(2, '0');
+  //   const y = d.getFullYear();
+  //   const m = pad(d.getMonth() + 1);
+  //   const day = pad(d.getDate());
+  //   const hh = pad(d.getHours());
+  //   const mm = pad(d.getMinutes());
+  //   const ss = pad(d.getSeconds());
+  //   return `${y}-${m}-${day}T${hh}:${mm}:${ss}`;
+  // }
 
-    const birth = new Date(selected);
-    this.setBirthFromDate(birth);
+  isoForDisplay(iso: string | null ): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    d.setHours(d.getHours());
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
   }
+
+  ngOnDestroy(): void {}
 }
