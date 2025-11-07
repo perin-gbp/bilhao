@@ -65,6 +65,7 @@ package-lock.json
 /libpeerconnection.log
 testem.log
 /typings
+/android
 
 # System files
 .DS_Store
