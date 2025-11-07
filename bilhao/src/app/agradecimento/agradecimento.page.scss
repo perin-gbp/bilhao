@@ -2,7 +2,7 @@
 
 /* FUNDO: use SEMPRE a var --background para ion-content */
 ion-content.thanks-bg {
-  --background: url("/assets/bg/agradecimento.png") center / contain no-repeat fixed !important;
+  --background: var(--thanks-bg) center / contain no-repeat fixed !important;
   position: relative;
   isolation: isolate;
   background-attachment: fixed;
