@@ -1,12 +1,33 @@
-<ion-header>
-  <ion-toolbar color="tertiary">
-    <ion-title>Obrigado</ion-title>
+<ion-header translucent="true">
+  <ion-toolbar color="dark">
+    <ion-title>Obrigado 💚</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div class="card">
-    <h1 class="display">Valeu por celebrar!</h1>
-    <p>LOREM IPSOM DOLOR</p>
+<ion-content class="thanks-bg" fullscreen>
+  <!-- overlay para leitura confortável -->
+  <div class="backdrop"></div>
+
+  <div class="center-wrap">
+    <ion-card class="thanks-card" mode="md">
+      <ion-card-header>
+        <ion-card-title>Valeu por celebrar o Bilhão!</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p class="lead">
+          Obrigado por fazer parte desse marco — amigos assim deixam cada segundo mais especial.
+        </p>
+
+        <p class="tiny">
+          P.S.: Tobias e Otto mandaram um “miau” de agradecimento 😺😺
+        </p>
+
+        <div class="actions">
+          <ion-button routerLink="/contador" color="primary">Voltar ao contador</ion-button>
+          <ion-button fill="clear" (click)="share()">Compartilhar</ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>
