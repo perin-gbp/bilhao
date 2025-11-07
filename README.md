@@ -48,6 +48,3 @@ Desenvolvido por **Tobias & Otto**,
 com assistência técnica honorária de **Arthur Perin** 🐾  
 
 ---
-
-> “A vida é feita de segundos — alguns dourados, outros confusos — mas todos contam.”  
-> — Bilhao Team ™
