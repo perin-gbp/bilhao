@@ -60,21 +60,20 @@ h1, .display {
 }
 
 /* Confete discreto no fundo (pontos + traços) */
-ion-content::part(scroll) {
-  background-image:
-    radial-gradient(#ffd75a 1px, transparent 1px),
-    radial-gradient(#6ec1ff 1px, transparent 1px),
-    radial-gradient(#ff9ecb 1px, transparent 1px);
-  background-position: 0 0, 12px 18px, 24px 6px;
-  background-size: 36px 36px;
-  background-attachment: fixed;
-  opacity: 0.7; /* mais suave */
-}
+// ion-content::part(scroll) {
+//   background-image:
+//     radial-gradient(#ffd75a 2px, transparent 1px),
+//     radial-gradient(#6ec1ff 2px, transparent 1px);
+//     // radial-gradient(#ff9ecb 2px, transparent 1px);
+//   background-position: 0 0, 12px 18px, 24px 6px;
+//   background-size: 36px 36px;
+//   background-attachment: fixed;
+//   opacity: 0.7; /* mais suave */
+// }
 
 /* Barra de tabs com um leve vidro */
 ion-tab-bar {
   backdrop-filter: saturate(160%) blur(6px);
-  background: color-mix(in srgb, var(--ion-color-secondary) 18%, #ffffff);
   border-top: 1px solid rgba(0,0,0,0.06);
 }
 
@@ -82,5 +81,11 @@ ion-toolbar[color="primary"] {
   background: linear-gradient(180deg, #ffd75a 0%, #f7ca45 100%);
   color: #1b1b1b;
   font-weight: 700;
+}
+
+ion-content.thanks-bg {
+  --background: none;
+  background: #0b0d12 url("/assets/bg/agradecimento.png") center/contain no-repeat fixed;
+  background-attachment: fixed;
 }
 

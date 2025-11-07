@@ -1,73 +1,81 @@
-:host {
-  --bg-url: url("/assets/bg/agradecimento.jpg");
-}
+/* src/app/agradecimento/agradecimento.page.scss */
 
-.thanks-bg {
-  --app-gold: #c9a73f;
-
-  background-image: var(--bg-url);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
+/* FUNDO: use SEMPRE a var --background para ion-content */
+ion-content.thanks-bg {
+  --background: url("/assets/bg/agradecimento.png") center / contain no-repeat fixed !important;
   position: relative;
-  min-height: 100%;
   isolation: isolate;
+  background-attachment: fixed;
+}
 
-  .backdrop {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(120% 120% at 50% 20%, rgba(0,0,0,.25), rgba(0,0,0,.65));
-    backdrop-filter: blur(1.5px);
-    z-index: 0;
+/* Overlay suave para leitura (opcional) */
+ion-content.thanks-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 120% at 50% 20%, rgba(0,0,0,.20), rgba(0,0,0,.60));
+  backdrop-filter: blur(1.5px);
+  z-index: 0;
+}
+
+/* Card central */
+.center-wrap {
+  position: relative;
+  z-index: 1; /* acima do overlay */
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.thanks-card {
+  width: min(760px, 92vw);
+  border-radius: 20px;
+  background: rgba(20, 22, 28, 0.78);
+  border: 1px solid rgba(201,167,63,.25);
+  box-shadow: 0 18px 40px rgba(0,0,0,.35);
+
+  ion-card-title {
+    color: #c9a73f;
+    font-weight: 800;
+    letter-spacing: .2px;
   }
 
-  .center-wrap {
-    position: relative;
-    z-index: 1;
-    min-height: 100%;
-    display: grid;
-    place-items: center;
-    padding: 16px;
+  .lead {
+    margin: 6px 0 12px;
+    line-height: 1.5;
+    color: #f6f6f6;
+    opacity: .95;
+    font-size: 1.04rem;
   }
 
-  .thanks-card {
-    width: min(720px, 92vw);
-    border-radius: 20px;
-    background: rgba(20, 22, 28, 0.75);
-    border: 1px solid rgba(201,167,63,.25);
-    box-shadow: 0 18px 40px rgba(0,0,0,.35);
+  p {
+    color: #efefef;
+    opacity: .92;
+  }
 
-    ion-card-title {
-      color: var(--app-gold);
-      font-weight: 800;
-      letter-spacing: .2px;
-    }
-
-    .lead {
-      margin: 6px 0 12px;
-      line-height: 1.5;
-      color: #f6f6f6;
-      opacity: .95;
-      font-size: 1.02rem;
-    }
-
-    .tiny {
-      margin-top: 6px;
-      font-size: .9rem;
-      color: #dcdcdc;
-      opacity: .8;
-    }
-
-    .actions {
-      margin-top: 10px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+  .tiny {
+    margin-top: 10px;
+    font-size: .92rem;
+    color: #dcdcdc;
+    opacity: .86;
   }
 }
 
+/* Confetti SEMPRE por baixo */
+canvas.confetti,
+canvas[id*="confetti"],
+canvas[class*="confetti"] {
+  z-index: 0 !important;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+
+/* Header translúcido */
 ion-header[translucent] + ion-content.thanks-bg {
   --padding-top: env(safe-area-inset-top);
+}
+
+@media (max-width: 480px) {
+  .thanks-card { width: 94vw; }
 }
