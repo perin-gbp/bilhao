@@ -36,7 +36,10 @@
               },
               "src/manifest.webmanifest"
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
+            "styles": [
+              "src/global.scss",
+              "src/theme/variables.scss"
+            ],
             "scripts": [],
             "browser": "src/main.ts",
             "serviceWorker": "src/ngsw-config.json"
@@ -62,8 +65,8 @@
                 }
               ],
               "outputHashing": "all",
-              "serviceWorker": false,
-              "baseHref": "/"
+              "serviceWorker": "src/ngsw-config.json",
+              "baseHref": "/bilhao/"
             },
             "development": {
               "optimization": false,
@@ -110,7 +113,10 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
+            "styles": [
+              "src/global.scss",
+              "src/theme/variables.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -123,7 +129,10 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         },
         "deploy": {
